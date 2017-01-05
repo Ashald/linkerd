@@ -1,0 +1,29 @@
+# A fairly minimal linkerd configuration with statsd exporting.
+
+admin:
+  port: 9990
+
+telemetry:
+- kind: io.l5d.commonMetrics
+- kind: io.l5d.statsd
+  prefix: linkerd
+  hostname: 192.168.99.100
+  port: 8125
+
+# An example service discovery backend that uses the filesystem to resolve endpoints.
+namers:
+- kind: io.l5d.fs
+  rootDir: linkerd/examples/io.l5d.fs
+
+routers:
+- protocol: http
+  baseDtab: |
+    /host     => /#/io.l5d.fs;
+    /method   => /$/io.buoyant.http.anyMethodPfx/host;
+    /http/1.1 => /method;
+  httpAccessLog: logs/access.log
+  label: int
+  dstPrefix: /http
+  servers:
+  - port: 4140
+    ip: 0.0.0.0

@@ -53,4 +53,7 @@ object Deps {
 
   // jwt for Marathon API
   val jwt = "com.pauldijou" %% "jwt-core" % "0.9.0"
+
+  // statsd client
+  val statsd = "com.datadoghq" % "java-dogstatsd-client" % "2.3"
 }
